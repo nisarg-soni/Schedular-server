@@ -5,7 +5,7 @@ module Api
                role = params[:role]=='1'
                query = params[:query]
                puts role
-               participants = Participant.where("name LIKE ?", "%"+query+"%")
+               participants = Participant.where("name LIKE ?", query+"%")
                 puts participants
                list =[]
                participants.each do |person|
