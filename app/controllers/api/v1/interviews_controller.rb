@@ -59,8 +59,8 @@ module Api
                             interview.participants << one
 
                             
-                            puts one.email
-                            puts one.name
+                            # puts one.email
+                            # puts one.name
                             mail_content = "Hey "+one.name+"!\n\nYou have an interview scheduled.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
                             #sendgrid mail func
                             from = SendGrid::Email.new(email: "interviewtesterib@gmail.com")
@@ -71,9 +71,9 @@ module Api
 
                             sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
                             response = sg.client.mail._('send').post(request_body: mail.to_json)
-                            puts response.status_code
-                            puts response.body
-                            puts response.headers
+                            # puts response.status_code
+                            # puts response.body
+                            # puts response.headers
                             #
                         end
 
@@ -113,7 +113,16 @@ module Api
                         for one in total_participants
                             interview.participants << one
 
-                            # NotificationMailer.new_interview(one,interview,false).deliver_now
+                            mail_content = "Hey "+one.name+"!\n\nInterview updated.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
+                            #sendgrid mail func
+                            from = SendGrid::Email.new(email: "interviewtesterib@gmail.com")
+                            to = SendGrid::Email.new(email: one.email)
+                            subject = interview.name
+                            content = SendGrid::Content.new(type: 'text/plain', value: mail_content)
+                            mail = SendGrid::Mail.new(from, subject, to, content)
+
+                            sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+                            response = sg.client.mail._('send').post(request_body: mail.to_json)
                         end
                         render json: {status: 'SUCCESS', message:'Updated Interview', data: interview},status: :ok
                     else
