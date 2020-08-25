@@ -3,7 +3,12 @@ module Api
         class InterviewsController < ApplicationController
             def index
                 interviews = Interview.order(date: :asc, start_time: :asc);
-                render json: {status: 'SUCCESS', message:'Loaded Interviews', data: interviews},status: :ok
+                list = []
+                interviews.each do |inter|
+                    list << inter.attributes.merge({"participants" => inter.participants})
+                end
+
+                render json: {status: 'SUCCESS', message:'Loaded Interviews', data: list},status: :ok
             end
 
             def show 

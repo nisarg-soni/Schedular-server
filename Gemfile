@@ -10,6 +10,8 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 
+# gem 'rack-cors', :require => 'rack/cors'
+
 gem 'pg'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.7'
@@ -25,7 +27,7 @@ gem 'pg'
 gem 'bootsnap', '>= 1.4.2', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
