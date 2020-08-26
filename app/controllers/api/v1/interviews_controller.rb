@@ -5,6 +5,7 @@ module Api
     module V1
         class InterviewsController < ApplicationController
                   
+            # controller to fetch all interviews.
             def index
                 interviews = Interview.order(date: :asc, start_time: :asc);
                 list = []
@@ -15,6 +16,7 @@ module Api
                 render json: {status: 'SUCCESS', message:'Loaded Interviews', data: list},status: :ok
             end
 
+            # controller to fetch a single interview with given id.
             def show 
                 interview = Interview.find(params[:id])
                 participants = interview.participants
@@ -31,6 +33,7 @@ module Api
                 render json: {status: 'SUCCESS', message:'Loaded Interview', data: interview.attributes.merge({"interviewers" => interviewers, "candidates" => candidates})},status: :ok
             end
 
+            # controller to create new interview.
             def create
                 interview = Interview.new(interview_params)
 
@@ -54,15 +57,14 @@ module Api
                     if interview.save
 
                         
-                        # puts mail_content
+
                         for one in total_participants
                             interview.participants << one
 
                             
-                            # puts one.email
-                            # puts one.name
-                            mail_content = "Hey "+one.name+"!\n\nYou have an interview scheduled.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
                             #sendgrid mail func
+                            mail_content = "Hey "+one.name+"!\n\nYou have an interview scheduled.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
+                            
                             from = SendGrid::Email.new(email: "interviewtesterib@gmail.com")
                             to = SendGrid::Email.new(email: one.email)
                             subject = interview.name
@@ -71,9 +73,7 @@ module Api
 
                             sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
                             response = sg.client.mail._('send').post(request_body: mail.to_json)
-                            # puts response.status_code
-                            # puts response.body
-                            # puts response.headers
+
                             #
                         end
 
@@ -87,6 +87,7 @@ module Api
                 end
             end
 
+            # controller to update a single interview with given id.
             def update
                 interview = Interview.find(params[:id])
 
@@ -112,9 +113,9 @@ module Api
 
                         for one in total_participants
                             interview.participants << one
-
-                            mail_content = "Hey "+one.name+"!\n\nInterview updated.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
                             #sendgrid mail func
+                            mail_content = "Hey "+one.name.capitalize+"!\n\nInterview updated.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
+                            
                             from = SendGrid::Email.new(email: "interviewtesterib@gmail.com")
                             to = SendGrid::Email.new(email: one.email)
                             subject = interview.name
@@ -133,6 +134,7 @@ module Api
                 end
             end 
 
+            #controller to delete a single interview with given id.
             def destroy
                 interview = Interview.find(params[:id])
 
@@ -149,6 +151,7 @@ module Api
                 params.require(:interview).permit(:name, :description, :date, :start_time, :end_time)
             end
 
+            # function to check foe overlaps with existing interviews.
             def overlaps (participants, interview)
                 given_id = interview.id
                 given_date = interview.date

@@ -1,3 +1,4 @@
+# migration file to create interviews-participants join table
 class CreateJoinTableInterviewParticipants < ActiveRecord::Migration[6.0]
   def change
     create_join_table :interviews, :participants do |t|

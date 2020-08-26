@@ -1,3 +1,4 @@
+# migration file to create interviews table
 class CreateInterviews < ActiveRecord::Migration[6.0]
   def change
     create_table :interviews do |t|
@@ -11,3 +12,4 @@ class CreateInterviews < ActiveRecord::Migration[6.0]
     end
   end
 end
+
