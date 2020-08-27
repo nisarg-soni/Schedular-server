@@ -1,9 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Backend for the interview schedular :
 
-Things you may want to cover:
+## Technologies :
+  * Ruby
+  * Rails
+  * Postgresql
+
+**To run on your local machine:**
 
 * Clone the repo and cd into the project folder.
   ```sh
