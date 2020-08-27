@@ -114,7 +114,8 @@ module Api
                         for one in total_participants
                             interview.participants << one
                             #sendgrid mail func
-                            mail_content = "Hey "+one.name.capitalize+"!\n\nInterview updated.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
+                            s=interview.start_time.get
+                            mail_content = "Hey "+one.name.capitalize+"!\n\nInterview updated.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"UTC"+"\nEnd time :"+interview.end_time.strftime("%H:%M")+"UTC"
                             
                             from = SendGrid::Email.new(email: "interviewtesterib@gmail.com")
                             to = SendGrid::Email.new(email: one.email)
