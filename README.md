@@ -5,20 +5,31 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Clone the repo and cd into the project folder.
+  ```sh
+  $ git clone https://github.com/nisarg-soni/Schedular-server.git
+  $ cd Schedular-server
+  ```
 
-* System dependencies
+* Check your ruby and rails versions and then run :
+  ```sh
+  $ bundle install
+  ```
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* To start the server run :
+  ```sh
+  $ rails s
+  ```
+## API Endpoints :
+  Base url : http://localhost:3000/api/v1/
+  *  GET          /api/v1/interviews                      (fetch all interviews)                                                            
+  * POST          /api/v1/interviews                      (create new interview)                                                             
+  * GET           /api/v1/interviews/:id                  (fetch single interview)                                                     
+  * PATCH         /api/v1/interviews/:id                  (update single interview)                                                 
+  * PUT           /api/v1/interviews/:id                  (update single interview)                                                   
+  * DELETE        /api/v1/interviews/:id                  (delete single interview)                                                           
+  * GET           /api/v1/participants/:query/:role       (fetch all participants with name starting with query and role)   
+  
+## Versions :
+* **Ruby** : 2.5.1
+* **Rails** : 6.0.3.2
