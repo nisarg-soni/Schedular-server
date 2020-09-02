@@ -62,7 +62,7 @@ module Api
                             interview.participants << one
 
                             
-                            #sendgrid mail func
+                            # sendgrid mail func
                             mail_content = "Hey "+one.name+"!\n\nYou have an interview scheduled.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"\nEnd time :"+interview.end_time.strftime("%H:%M")
                             
                             from = SendGrid::Email.new(email: "interviewtesterib@gmail.com")
@@ -89,9 +89,10 @@ module Api
 
             # controller to update a single interview with given id.
             def update
-                puts params
-                interview = Interview.find(params[:id])
 
+                interview = Interview.find(params[:id])
+                current_interview = Interview.new(interview_params)
+                current_interview.id=params[:id]
                 interviewers = params[:interviewers]
                 candidates = params[:candidates]
 
@@ -107,7 +108,7 @@ module Api
                     total_participants << person
                 end
                 
-                if not overlaps(total_participants, interview)
+                if not overlaps(total_participants, current_interview)
                     if interview.update_attributes(interview_params)
 
                         interview.participants.clear
@@ -115,7 +116,7 @@ module Api
                         for one in total_participants
                             interview.participants << one
                             #sendgrid mail func
-                            s=interview.start_time.get
+                            
                             mail_content = "Hey "+one.name.capitalize+"!\n\nInterview updated.\n\nDescription : "+interview.description+"\nDate :"+interview.date.strftime("%d/%m/%Y")+"\nStart time: "+interview.start_time.strftime("%H:%M")+"UTC"+"\nEnd time :"+interview.end_time.strftime("%H:%M")+"UTC"
                             
                             from = SendGrid::Email.new(email: "interviewtesterib@gmail.com")
@@ -129,7 +130,7 @@ module Api
                         end
                         render json: {status: 'SUCCESS', message:'Updated Interview', data: interview},status: :ok
                     else
-                        render json: {status: 'ERROR', message: interview.errors},status: :ok
+                        render json: {status: 'ERROR', message: interview.errors},status: :bad_request
                     end
                 else
                     puts "here"
@@ -156,16 +157,16 @@ module Api
 
             # function to check foe overlaps with existing interviews.
             def overlaps (participants, interview)
+                puts interview
+                puts "overlaps called"
                 given_id = interview.id
                 given_date = interview.date
                 start = interview.start_time
                 finish = interview.end_time
                 participants.each do |person|
                     person_interviews = person.interviews
-                    # puts person_interviews
                     person_interviews.each do |inter|
                         if inter.id!=given_id and given_date==inter.date and !((start >= inter.end_time) or (finish <= inter.start_time))
-                            # puts "here"
                             return true
                         end
                     end
@@ -173,6 +174,9 @@ module Api
 
                 return false
             end
+
+            
         end
     end
 end
+
