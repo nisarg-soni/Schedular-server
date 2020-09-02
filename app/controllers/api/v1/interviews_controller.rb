@@ -83,12 +83,13 @@ module Api
                         render json: {status: 'ERROR', message: interview.errors},status: :bad_request
                     end
                 else
-                    render json: {status: 'ERROR', message:'Overlap with existing interview detected.'},status: :method_not_allowed
+                    render json: {status: 'ERROR', message:'Overlap with existing interview detected.'},status: :ok
                 end
             end
 
             # controller to update a single interview with given id.
             def update
+                puts params
                 interview = Interview.find(params[:id])
 
                 interviewers = params[:interviewers]
@@ -128,10 +129,11 @@ module Api
                         end
                         render json: {status: 'SUCCESS', message:'Updated Interview', data: interview},status: :ok
                     else
-                        render json: {status: 'ERROR', message: interview.errors},status: :bad_request
+                        render json: {status: 'ERROR', message: interview.errors},status: :ok
                     end
                 else
-                    render json: {status: 'ERROR', message:'Overlap with existing interview detected.'},status: :method_not_allowed
+                    puts "here"
+                    render json: {status: 'ERROR', message:'Overlap with existing interview detected.'},status: :ok
                 end
             end 
 
@@ -142,7 +144,7 @@ module Api
                 if interview.destroy
                     render json: {status: 'SUCCESS', message:'Deleted Interview'},status: :ok
                 else
-                    render json: {status: 'ERROR', message: interview.errors},status: :bad_request
+                    render json: {status: 'ERROR', message: interview.errors},status: :ok
                 end
             end
 
@@ -160,9 +162,10 @@ module Api
                 finish = interview.end_time
                 participants.each do |person|
                     person_interviews = person.interviews
-
+                    # puts person_interviews
                     person_interviews.each do |inter|
                         if inter.id!=given_id and given_date==inter.date and !((start >= inter.end_time) or (finish <= inter.start_time))
+                            # puts "here"
                             return true
                         end
                     end
